@@ -175,4 +175,68 @@ public class AFloat {
     
         return new AFloat(output);
     }
+
+    public AFloat mul(AFloat other){
+        String num1 = this.number;
+        String num2 = other.number;
+        boolean negative = false;
+
+        if (!num1.contains(".")) num1 += ".0";
+        if (!num2.contains(".")) num2 += ".0";
+
+        if (num1.charAt(0) == '-') {
+            negative = !negative;
+            num1 = num1.substring(1);
+        }
+        if (num2.charAt(0) == '-') {
+            negative = !negative;
+            num2 = num2.substring(1);
+        }
+        if (num1.equals("0") || num2.equals("0")) return new AFloat();
+        int dec1 = num1.length()-1-num1.indexOf('.');
+        int dec2 = num2.length()-1-num2.indexOf('.');
+        int totalDec = dec1+dec2;
+        num1 = num1.replace(".", "");
+        num2 = num2.replace(".", "");
+
+        String output = "0";
+        int len1 = num1.length();
+        int len2 = num2.length();
+        int i = len1-1;
+
+        while(i>= 0){
+            int[] sub = new int[len2+1];
+            int carry = 0;
+            int k=0;
+            for(int j=len2-1;j >= 0;j--){
+                int sum = (num1.charAt(i)-'0')*(num2.charAt(j)-'0') + carry;
+                sub[k++]= sum%10;
+                carry = sum/10;
+            }
+            if(carry != 0){
+                sub[k++] = carry;
+            }
+
+            char[] string = new char[k];
+            for(int m = k-1,n=0; m>=0;m--,n++){
+                string[n] = (char)(sub[m]+'0');
+            }
+            String Str = new String(string);
+            for(int m =(len1-1-i);m>0;m--){
+                Str+="0";
+            }
+            AInteger a = new AInteger(output);
+            output = a.add(new AInteger(Str)).number;
+            i--;
+        }
+
+        while (output.length() <= totalDec) output = "0" + output;
+        String result = output.substring(0, output.length() - totalDec) + "." + output.substring(output.length() - totalDec);
+
+        while (result.endsWith("0")) result = result.substring(0, result.length() - 1);
+        if (result.endsWith(".")) result = result.substring(0, result.length() - 1);
+
+        result = negative ? "-" + result : result;
+        return new AFloat(result);   
+}
 }
