@@ -185,4 +185,56 @@ public class AInteger {
         String finalStr =  negative ? "-" + output: output;
         return new AInteger(finalStr);
     }
+
+    public AInteger div(AInteger other) {
+        String dividend = this.number;
+        String divisor = other.number;
+    
+        if (divisor.equals("0") || divisor.equals("-0")) {
+            return new AInteger("");
+        }
+    
+        boolean negative = false;
+        if (dividend.charAt(0) == '-') {
+            negative = !negative;
+            dividend = dividend.substring(1);
+        }
+        if (divisor.charAt(0) == '-') {
+            negative = !negative;
+            divisor = divisor.substring(1);
+        }
+    
+        int m = 0;
+        while (m < divisor.length() - 1 && divisor.charAt(m) == '0') m++;
+        divisor = divisor.substring(m);
+    
+        StringBuilder result = new StringBuilder();
+        String current = "";
+    
+        for (int i = 0; i < dividend.length(); i++) {
+            current += dividend.charAt(i);
+            int j = 0;
+            while (j < current.length() - 1 && current.charAt(j) == '0') j++;
+            current = current.substring(j);
+    
+            int count = 0;
+            while (commonMethod.compare(current, divisor) >= 0) {
+                AInteger a = new AInteger(current);
+                current = a.sub(new AInteger(divisor)).number;
+                count++;
+            }
+    
+            result.append(count);
+        }
+
+        String quotient = result.toString();
+        int n = 0;
+        while (n < quotient.length() - 1 && quotient.charAt(n) == '0') n++;
+        if (quotient.isEmpty()) quotient = "0";
+        else quotient = quotient.substring(n);
+    
+        if (quotient.equals("0")) negative = false; 
+    
+        return new AInteger(negative ? "-" + quotient : quotient);
+    }
 }
