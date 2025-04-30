@@ -238,5 +238,134 @@ public class AFloat {
 
         result = negative ? "-" + result : result;
         return new AFloat(result);   
-}
+    }
+    
+    public AFloat div(AFloat other) {
+        String dividend = this.number;
+        String divisor = other.number;
+
+        boolean negative = false;
+        if (dividend.startsWith("-")) {
+            negative = !negative;
+            dividend = dividend.substring(1);
+        }
+        if (divisor.startsWith("-")) {
+            negative = !negative;
+            divisor = divisor.substring(1);
+        }
+
+        int first_decimal = dividend.indexOf('.');
+        int second_decimal = divisor.indexOf('.');
+
+        int decimal_num1 = (first_decimal == -1) ? 0 : (dividend.length() - first_decimal - 1);
+        int decimal_num2 = (second_decimal == -1) ? 0 : (divisor.length() - second_decimal - 1);
+
+        if (first_decimal != -1) {
+            dividend = dividend.substring(0, first_decimal) + dividend.substring(first_decimal + 1);
+        }
+        if (second_decimal != -1) {
+            divisor = divisor.substring(0, second_decimal) + divisor.substring(second_decimal + 1);
+        }
+
+        dividend = commonMethod.removeLeadingZeros(dividend);
+        divisor = commonMethod.removeLeadingZeros(divisor);
+
+        if (divisor.equals("0")) throw new ArithmeticException("Division by zero");
+
+        int shift = decimal_num2 - decimal_num1;
+
+        StringBuilder result = new StringBuilder();
+        String current = "";
+
+        for (int i = 0; i < dividend.length(); i++) {
+            current += dividend.charAt(i);
+            current = commonMethod.removeLeadingZeros(current);
+            if (commonMethod.compare(current, divisor) < 0) {
+                result.append(result.length() == 0 ? "0" : "0");
+                continue;
+            }
+            int count = 0;
+            while (commonMethod.compare(current, divisor) >= 0) {
+                current = new AFloat(current).sub(new AFloat(divisor)).number;
+                count++;
+            }
+            result.append(count);
+        }
+
+        result.append('.');
+        int precision = 1000;
+        while (precision > 0) {
+            current += "0";
+            current = commonMethod.removeLeadingZeros(current);
+            if (commonMethod.compare(current, divisor) < 0) {
+                result.append('0');
+            } else {
+                int count = 0;
+                while (commonMethod.compare(current, divisor) >= 0) {
+                    current = new AFloat(current).sub(new AFloat(divisor)).number;
+                    count++;
+                }
+                result.append(count);
+            }
+            precision--;
+        }
+
+        int decimal_index = result.indexOf(".");
+        result.deleteCharAt(decimal_index);
+
+        int new_index = decimal_index + shift;
+
+        if (new_index <= 0) {
+            while (new_index < 0) {
+                result.insert(0, '0');
+                new_index++;
+            }
+            result.insert(0, "0.");
+        } else {
+            while (result.length() <= new_index) {
+                result.append('0');
+            }
+            result.insert(new_index, '.');
+        }
+
+        String finalResult = result.toString();
+        if (finalResult.contains(".")) {
+            finalResult = finalResult.replaceAll("0+$", "");
+            if (finalResult.endsWith(".")) {
+                finalResult = finalResult.substring(0, finalResult.length() - 1);
+            }
+        }
+        finalResult = commonMethod.removeLeadingZeros(finalResult);
+        if (negative && !finalResult.equals("0")) {
+            finalResult = "-" + finalResult;
+        }
+
+        return new AFloat(finalResult);
+    }
+
+    public AFloat mod(AFloat other) {
+        String divisor = other.number;
+
+        if (divisor.equals("0") || divisor.equals("-0")) {
+            return new AFloat(""); 
+        }
+
+        AFloat quotient = this.div(other);
+        System.out.println(quotient.number);
+
+        String[] parts = quotient.number.split("\\.");
+        String intPart = parts[0]; 
+        // System.out.println(intPart);
+
+        if (quotient.number.charAt(0) == '-' && parts.length > 1 && !parts[1].matches("0*")) {
+            intPart = new AInteger(intPart).sub(new AInteger("1")).number; 
+        }
+
+        AFloat product = other.mul(new AFloat(intPart));
+        System.out.println(product.number+" "+ other.number);
+
+        AFloat remainder = this.sub(product);
+        System.out.println(remainder.number);
+        return remainder;
+    }   
 }
