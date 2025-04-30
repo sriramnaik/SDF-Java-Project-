@@ -24,7 +24,6 @@ public class AInteger {
     public String toString(){
         return this.number;
     }
-
     public AInteger add(AInteger other){
         String num1 = this.number;
         String num2 = other.number;
@@ -136,5 +135,54 @@ public class AInteger {
         }
     
         return new AInteger(new String(string));
+    }
+
+    public AInteger mul(AInteger other){
+        String num1 = this.number;
+        String num2 = other.number;
+        boolean negative = false;
+
+        if (num1.charAt(0) == '-') {
+            negative = !negative;
+            num1 = num1.substring(1);
+        }
+        if (num2.charAt(0) == '-') {
+            negative = !negative;
+            num2 = num2.substring(1);
+        }
+        if (num1.equals("0") || num2.equals("0")) return new AInteger();
+
+        String output = "0";
+        int len1 = num1.length();
+        int len2 = num2.length();
+        int i = len1-1;
+
+        while(i>= 0){
+            int[] sub = new int[len2+1];
+            int carry = 0;
+            int k=0;
+            for(int j=len2-1;j >= 0;j--){
+                int sum = (num1.charAt(i)-'0')*(num2.charAt(j)-'0') + carry;
+                sub[k++]= sum%10;
+                carry = sum/10;
+            }
+            if(carry != 0){
+                sub[k++] = carry;
+            }
+            
+            char[] string = new char[k];
+            for(int m = k-1,n=0; m>=0;m--,n++){
+                string[n] = (char)(sub[m]+'0');
+            }
+            String Str = new String(string);
+            for(int m =(len1-1-i);m>0;m--){
+                Str+="0";
+            }
+            AInteger a = new AInteger(output);
+            output = a.add(new AInteger(Str)).number;
+            i--;
+        }
+        String finalStr =  negative ? "-" + output: output;
+        return new AInteger(finalStr);
     }
 }
