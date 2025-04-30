@@ -93,4 +93,86 @@ public class AFloat {
     
         return new AFloat(resStr);
     }
+
+    public AFloat sub(AFloat other) {
+        String num1 = this.number;
+        String num2 = other.number;
+        boolean negative = false;
+    
+        if (!num1.contains(".")) num1 += ".0";
+        if (!num2.contains(".")) num2 += ".0";
+    
+        int dec1 = num1.length() - 1 - num1.indexOf('.');
+        int dec2 = num2.length() - 1 - num2.indexOf('.');
+        while (dec1 < dec2) {
+            num1 += "0";
+            dec1++;
+        }
+        while (dec2 < dec1) {
+            num2 += "0";
+            dec2++;
+        }
+    
+        int int1 = num1.indexOf('.');
+        int int2 = num2.indexOf('.');
+        while (int1 < int2) {
+            num1 = "0" + num1;
+            int1++;
+        }
+        while (int2 < int1) {
+            num2 = "0" + num2;
+            int2++;
+        }
+    
+        String num1Comp = num1.replace(".", "");
+        String num2Comp = num2.replace(".", "");
+        if (num1Comp.compareTo(num2Comp) < 0) {
+            negative = true;
+            String temp = num1;
+            num1 = num2;
+            num2 = temp;
+        }
+    
+        int len = num1.length();
+        int carry = 0;
+        StringBuilder result = new StringBuilder();
+    
+        for (int i = len - 1; i >= 0; i--) {
+            char c1 = num1.charAt(i);
+            char c2 = num2.charAt(i);
+            if (c1 == '.') {
+                result.append('.');
+                continue;
+            }
+    
+            int digit1 = (c1 - '0') + carry;
+            int digit2 = c2 - '0';
+    
+            if (digit1 < digit2) {
+                digit1 += 10;
+                carry = -1;
+            } else {
+                carry = 0;
+            }
+    
+            result.append((char) ((digit1 - digit2) + '0'));
+        }
+    
+        if (negative) result.append('-');
+    
+        String output = result.reverse().toString();
+    
+        int start = 0;
+        while (start < output.length() - 1 && output.charAt(start) == '0' && output.charAt(start + 1) != '.') {
+            start++;
+        }
+        output = output.substring(start);
+    
+        if (output.contains(".")) {
+            while (output.endsWith("0")) output = output.substring(0, output.length() - 1);
+            if (output.endsWith(".")) output = output.substring(0, output.length() - 1);
+        }
+    
+        return new AFloat(output);
+    }
 }
