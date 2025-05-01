@@ -20,10 +20,12 @@ public class AInteger {
     public String getString(){
         return this.number;
     }
+
     @Override
     public String toString(){
         return this.number;
     }
+
     public AInteger add(AInteger other){
         String num1 = this.number;
         String num2 = other.number;
@@ -55,16 +57,21 @@ public class AInteger {
             i--;
             j--;
         }
-        // System.out.println(result);
-        if (isNegative1 && isNegative2) result.append('-');
-        result = new StringBuilder(commonMethod.removeLeadingZeros(result.reverse().toString()));
+        
+        String finalAnswer = (commonMethod.removeLeadingZeros(result.reverse().toString()));
+        if (finalAnswer.equals("0")) return new AInteger("0");
+        if (isNegative1 && isNegative2) finalAnswer = "-" + finalAnswer;
 
-        return new AInteger(new String(result.toString()));
+        return new AInteger(finalAnswer);
     }
+
     public AInteger sub(AInteger other) {
         String num1 = this.number;
         String num2 = other.number;
-    
+        
+        num1 = commonMethod.removeLeadingZeros(num1);
+        num2 = commonMethod.removeLeadingZeros(num2);
+
         boolean isNegative1 = num1.charAt(0) == '-';
         boolean isNegative2 = num2.charAt(0) == '-';
 
@@ -133,15 +140,22 @@ public class AInteger {
         for (int m = k - 1; m >= 0; m--, n++) {
             string[n] = (char)(output[m] + '0');
         }
-    
-        return new AInteger(new String(string));
+        
+        String resultStr = new String(string);
+        if (resultStr.equals("-0") || resultStr.equals("0")) {
+        return new AInteger("0");
+        }
+
+        return new AInteger(resultStr);
     }
 
     public AInteger mul(AInteger other){
         String num1 = this.number;
         String num2 = other.number;
         boolean negative = false;
+        if (num1.equals("0") || num2.equals("0")) return new AInteger();
 
+        
         if (num1.charAt(0) == '-') {
             negative = !negative;
             num1 = num1.substring(1);
@@ -150,7 +164,9 @@ public class AInteger {
             negative = !negative;
             num2 = num2.substring(1);
         }
-        if (num1.equals("0") || num2.equals("0")) return new AInteger();
+        
+        num1 = commonMethod.removeLeadingZeros(num1);
+        num2 = commonMethod.removeLeadingZeros(num2);
 
         String output = "0";
         int len1 = num1.length();
@@ -193,7 +209,7 @@ public class AInteger {
         if (divisor.equals("0") || divisor.equals("-0")) {
             return new AInteger("");
         }
-    
+
         boolean negative = false;
         if (dividend.charAt(0) == '-') {
             negative = !negative;
@@ -204,9 +220,8 @@ public class AInteger {
             divisor = divisor.substring(1);
         }
     
-        int m = 0;
-        while (m < divisor.length() - 1 && divisor.charAt(m) == '0') m++;
-        divisor = divisor.substring(m);
+        dividend = commonMethod.removeLeadingZeros(dividend);
+        divisor = commonMethod.removeLeadingZeros(divisor);
     
         StringBuilder result = new StringBuilder();
         String current = "";
@@ -228,13 +243,54 @@ public class AInteger {
         }
 
         String quotient = result.toString();
-        int n = 0;
-        while (n < quotient.length() - 1 && quotient.charAt(n) == '0') n++;
-        if (quotient.isEmpty()) quotient = "0";
-        else quotient = quotient.substring(n);
+        if(quotient.isEmpty()) quotient = "0";
+        else {
+            int n = 0;
+            while (n < quotient.length() - 1 && quotient.charAt(n) == '0') n++;
+            quotient = quotient.substring(n);
+        }
     
         if (quotient.equals("0")) negative = false; 
     
         return new AInteger(negative ? "-" + quotient : quotient);
     }
+
+    public AInteger mod(AInteger other){
+        String dividend = this.number;
+        String divisor = other.number;
+    
+        if (divisor.equals("0") || divisor.equals("-0")) {
+            return new AInteger("");
+        }
+    
+        boolean negative_num1 = false;
+        boolean negative_num2 = false;
+        if (dividend.charAt(0) == '-') {
+            negative_num1 = !negative_num1;
+            dividend = dividend.substring(1);
+        }
+        if (divisor.charAt(0) == '-') {
+            negative_num2 = !negative_num2;
+            divisor = divisor.substring(1);
+        }
+
+        dividend = commonMethod.removeLeadingZeros(dividend);
+        divisor = commonMethod.removeLeadingZeros(divisor);
+        String current = "";
+    
+        for (int i = 0; i < dividend.length(); i++) {
+            current += dividend.charAt(i);
+            int j = 0;
+            while (j < current.length() - 1 && current.charAt(j) == '0') j++;
+            current = current.substring(j);
+
+            while (commonMethod.compare(current, divisor) >= 0) {
+                AInteger a = new AInteger(current);
+                current = a.sub(new AInteger(divisor)).number;
+            }
+        }
+        if(negative_num1 && !current.equals("0")) current =  "-" + current;
+        return new AInteger(current);
+    }
+
 }
