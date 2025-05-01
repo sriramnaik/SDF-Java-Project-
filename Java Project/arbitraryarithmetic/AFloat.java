@@ -21,6 +21,7 @@ public class AFloat {
     public String getString(){
         return this.number;
     }
+    
     @Override
     public String toString(){
         return this.number;
@@ -29,9 +30,27 @@ public class AFloat {
     public AFloat add(AFloat other) {
         String num1 = this.number;
         String num2 = other.number;
+        boolean neg2 = num2.startsWith("-");
+        boolean neg1 = num1.startsWith("-");
 
         if (!num1.contains(".")) num1 += ".0";
         if (!num2.contains(".")) num2 += ".0";
+
+        if (neg1) num1 = num1.substring(1);
+        if (neg2) num2 = num2.substring(1);
+
+        if (num1.endsWith(".")) num1 += "0";
+        if (num2.endsWith(".")) num2 += "0";
+
+
+        if (neg1 && !neg2) {
+            return other.sub(new AFloat(num1));  
+        } else if (!neg1 && neg2) {
+            return this.sub(new AFloat(num2));   
+        }
+
+        if (num1.startsWith(".")) num1 = "0" + num1;
+        if (num2.startsWith(".")) num2 = "0" + num2;
     
         int int1 = num1.indexOf(".");
         int int2 = num2.indexOf(".");
@@ -93,12 +112,30 @@ public class AFloat {
     
         return new AFloat(resStr);
     }
-
+    
     public AFloat sub(AFloat other) {
         String num1 = this.number;
         String num2 = other.number;
+        boolean neg1 = num1.startsWith("-");
+        boolean neg2 = num2.startsWith("-");
         boolean negative = false;
-    
+
+        if (neg1) num1 = num1.substring(1);
+        if (neg2) num2 = num2.substring(1);
+        if (num1.startsWith(".")) num1 = "0" + num1;
+        if (num2.startsWith(".")) num2 = "0" + num2;
+        if (num1.endsWith(".")) num1 += "0";
+        if (num2.endsWith(".")) num2 += "0";
+
+
+        if (neg1 && !neg2) {
+            return new AFloat("-" + new AFloat(num1).add(new AFloat(num2)).number);
+        } else if (!neg1 && neg2) {
+            return this.add(new AFloat(num2)); 
+        } else if (neg1 && neg2) {
+            return new AFloat(num2).sub(new AFloat(num1)); 
+        }
+
         if (!num1.contains(".")) num1 += ".0";
         if (!num2.contains(".")) num2 += ".0";
     
@@ -172,10 +209,12 @@ public class AFloat {
             while (output.endsWith("0")) output = output.substring(0, output.length() - 1);
             if (output.endsWith(".")) output = output.substring(0, output.length() - 1);
         }
-    
+        
+        if (output.isEmpty()) output = "0";
+        if (negative && !output.equals("0")) output = "-" + output;
         return new AFloat(output);
     }
-
+    
     public AFloat mul(AFloat other){
         String num1 = this.number;
         String num2 = other.number;
@@ -192,6 +231,10 @@ public class AFloat {
             negative = !negative;
             num2 = num2.substring(1);
         }
+
+        num1 = commonMethod.removeLeadingZeros(num1);
+        num2 = commonMethod.removeLeadingZeros(num2);
+
         if (num1.equals("0") || num2.equals("0")) return new AFloat();
         int dec1 = num1.length()-1-num1.indexOf('.');
         int dec2 = num2.length()-1-num2.indexOf('.');
@@ -237,13 +280,17 @@ public class AFloat {
         if (result.endsWith(".")) result = result.substring(0, result.length() - 1);
 
         result = negative ? "-" + result : result;
+        if (result.startsWith(".")) result = "0" + result;
+        if (result.isEmpty()) result = "0";
+        if (result.equals("0")) negative = false;
+
         return new AFloat(result);   
-    }
+}
     
     public AFloat div(AFloat other) {
         String dividend = this.number;
         String divisor = other.number;
-
+    
         boolean negative = false;
         if (dividend.startsWith("-")) {
             negative = !negative;
@@ -253,30 +300,30 @@ public class AFloat {
             negative = !negative;
             divisor = divisor.substring(1);
         }
-
+    
         int first_decimal = dividend.indexOf('.');
         int second_decimal = divisor.indexOf('.');
-
+    
         int decimal_num1 = (first_decimal == -1) ? 0 : (dividend.length() - first_decimal - 1);
         int decimal_num2 = (second_decimal == -1) ? 0 : (divisor.length() - second_decimal - 1);
-
+    
         if (first_decimal != -1) {
             dividend = dividend.substring(0, first_decimal) + dividend.substring(first_decimal + 1);
         }
         if (second_decimal != -1) {
             divisor = divisor.substring(0, second_decimal) + divisor.substring(second_decimal + 1);
         }
-
+    
         dividend = commonMethod.removeLeadingZeros(dividend);
         divisor = commonMethod.removeLeadingZeros(divisor);
-
+    
         if (divisor.equals("0")) throw new ArithmeticException("Division by zero");
-
+    
         int shift = decimal_num2 - decimal_num1;
-
+    
         StringBuilder result = new StringBuilder();
         String current = "";
-
+    
         for (int i = 0; i < dividend.length(); i++) {
             current += dividend.charAt(i);
             current = commonMethod.removeLeadingZeros(current);
@@ -291,7 +338,7 @@ public class AFloat {
             }
             result.append(count);
         }
-
+    
         result.append('.');
         int precision = 1000;
         while (precision > 0) {
@@ -309,12 +356,12 @@ public class AFloat {
             }
             precision--;
         }
-
+    
         int decimal_index = result.indexOf(".");
         result.deleteCharAt(decimal_index);
-
+    
         int new_index = decimal_index + shift;
-
+    
         if (new_index <= 0) {
             while (new_index < 0) {
                 result.insert(0, '0');
@@ -327,7 +374,7 @@ public class AFloat {
             }
             result.insert(new_index, '.');
         }
-
+    
         String finalResult = result.toString();
         if (finalResult.contains(".")) {
             finalResult = finalResult.replaceAll("0+$", "");
@@ -339,24 +386,24 @@ public class AFloat {
         if (negative && !finalResult.equals("0")) {
             finalResult = "-" + finalResult;
         }
-
+    
         return new AFloat(finalResult);
     }
-
+    
     public AFloat mod(AFloat other) {
         String divisor = other.number;
-
+    
         if (divisor.equals("0") || divisor.equals("-0")) {
             return new AFloat(""); 
         }
-
+    
         AFloat quotient = this.div(other);
         System.out.println(quotient.number);
 
         String[] parts = quotient.number.split("\\.");
         String intPart = parts[0]; 
         // System.out.println(intPart);
-
+    
         if (quotient.number.charAt(0) == '-' && parts.length > 1 && !parts[1].matches("0*")) {
             intPart = new AInteger(intPart).sub(new AInteger("1")).number; 
         }
@@ -367,5 +414,5 @@ public class AFloat {
         AFloat remainder = this.sub(product);
         System.out.println(remainder.number);
         return remainder;
-    }   
+    }  
 }
