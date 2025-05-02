@@ -1,0 +1,24 @@
+<project name="CalculatorUI" default="compile" basedir=".">
+
+<property name="CalculatorUI" value="CalculatorUI.java"/>
+<property name="Build" value="calculator_Build"/>
+
+<target name="clean">
+    <delete dir="${Build}"/>
+</target>
+
+<target name="compile" > 
+    <mkdir dir="${Build}"/>
+    <javac srcdir="${CalculatorUI}" destdir="${Build}" includes="${CalculatorUI}" classpath="Java Project"/>
+            
+</target>
+</project>  
+
+
+
+
+
+
+
+
+
