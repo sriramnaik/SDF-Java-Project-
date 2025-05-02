@@ -1,14 +1,9 @@
-# Use an official OpenJDK image
 FROM openjdk:17
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the project files into the container
 COPY . /app
 
-# Compile the Java files
 RUN javac MyInfArith.java arbitraryarithmetic/*.java
 
-# Set the command to run the application
 ENTRYPOINT ["java", "MyInfArith"]

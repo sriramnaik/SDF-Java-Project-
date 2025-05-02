@@ -32,13 +32,13 @@
 #### Compile & Package
 
 bash
-ant compile
+ant (to compile)
 
 
 #### Run the Program
 
 bash
-ant run -Dtype=<int|float> -Dop=<add|sub|mul|div> -Darg1=<num1> -Darg2=<num2>
+
 
 
 #### Clean Build
