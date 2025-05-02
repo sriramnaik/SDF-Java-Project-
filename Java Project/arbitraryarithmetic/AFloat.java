@@ -377,11 +377,18 @@ public class AFloat {
     
         String finalResult = result.toString();
         if (finalResult.contains(".")) {
-            finalResult = finalResult.replaceAll("0+$", "");
-            if (finalResult.endsWith(".")) {
-                finalResult = finalResult.substring(0, finalResult.length() - 1);
+            int i = finalResult.length() - 1;
+            while (i >= 0 && finalResult.charAt(i) == '0') {
+                i--;
             }
+        
+            if (i >= 0 && finalResult.charAt(i) == '.') {
+                i--;
+            }
+        
+            finalResult = finalResult.substring(0, i + 1);
         }
+        
         finalResult = commonMethod.removeLeadingZeros(finalResult);
         if (negative && !finalResult.equals("0")) {
             finalResult = "-" + finalResult;
