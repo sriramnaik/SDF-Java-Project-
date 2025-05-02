@@ -19,6 +19,7 @@ This library is developed as part of the CS1023 Software Development Fundamental
 - Modular structure with unit tests
 
 ## Project Structure
+```
   • Java Project
 – arbitraryarithmetic
 ∗ AFloat.java
@@ -40,34 +41,7 @@ This library is developed as part of the CS1023 Software Development Fundamental
 – dockerfile
 – Latex documentation
 – README.md
-
-
-# ArbitraryArithmetic
-
-## Overview
-
-*ArbitraryArithmetic* is a Java-based library and CLI tool for performing arithmetic operations on integers and floating-point numbers with *infinite precision. It bypasses the limitations of Java's native numeric types by using **string-based arithmetic*.
-
----
-
-## Features
-
-- Infinite-precision support for:
-  - *Integers* (AInteger.java)
-  - *Floating-point numbers* (AFloat.java)
-- Operations:
-  - Addition (add)
-  - Subtraction (sub)
-  - Multiplication (mul)
-  - Division (div)
-- Java CLI runner: MyInfArith.java
-- Apache Ant-based build automation
-- Docker support
-- Python helper script for compiling, JAR creation, and CLI execution
-
----
-
-
+```
 ## Build & Run
 
 ### Option 1: Using Apache Ant
