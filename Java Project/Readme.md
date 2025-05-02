@@ -21,26 +21,25 @@ This library is developed as part of the CS1023 Software Development Fundamental
 ## Project Structure
 ```
   • Java Project
-– arbitraryarithmetic
-∗ AFloat.java
-∗ AInteger.java
-∗ commonMethod.java
-∗ aarithmetic.jar
-– MyInfArith.java
-– build.xml
-– build
-∗ arbitraryarithmetic
-· AFloat.class
-· AInteger.java
-1
-· commonMethod.java
-∗ MyInfArith.class
-– Script.py
-– compile.py
-– default-test-case.txt
-– dockerfile
-– Latex documentation
-– README.md
+      – arbitraryarithmetic
+          ∗ AFloat.java
+          ∗ AInteger.java
+          ∗ commonMethod.java
+          ∗ aarithmetic.jar
+      – MyInfArith.java
+      – build.xml
+      – build
+          ∗ arbitraryarithmetic
+            · AFloat.class
+            · AInteger.java
+            · commonMethod.java
+          ∗ MyInfArith.class
+      – Script.py
+      – compile.py
+      – default-test-case.txt
+      – dockerfile
+      – Latex documentation
+      – README.md
 ```
 ## Build & Run
 
