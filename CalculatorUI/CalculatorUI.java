@@ -3,8 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
-import arbitraryarithmetic.AFloat;
-import arbitraryarithmetic.AInteger;
+import arbitraryarithmetic.*;
 
 public class CalculatorUI {
     private JTextArea primaryArea;

@@ -1,21 +1,27 @@
-<project name="CalculatorUI" default="compile" basedir=".">
+<project name="CalculatorUIProject" default="compile" basedir=".">
 
-<property name="CalculatorUI" value="CalculatorUI.java"/>
-<property name="Build" value="calculator_Build"/>
+    <!-- Adjust paths relative to this build file -->
+    <property name="src1.dir" value="../Java Project"/>
+    <property name="src2.dir" value="."/>
+    <property name="build.dir" value="calculator_Build"/>
 
-<target name="clean">
-    <delete dir="${Build}"/>
-</target>
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
 
-<target name="compile" > 
-    <mkdir dir="${Build}"/>
-    <javac srcdir="${CalculatorUI}" destdir="${Build}" includes="${CalculatorUI}" classpath="Java Project"/>
-            
-</target>
-</project>  
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <javac destdir="${build.dir}" includeantruntime="false">
+            <!-- Include both source dirs -->
+            <src path="${src1.dir}"/>
+            <src path="${src2.dir}"/>
 
+            <!-- Exclude MyInfArith.java -->
+            <exclude name="MyInfArith.java"/>
+        </javac>
+    </target>
 
-
+</project>
 
 
 
