@@ -1,3 +1,47 @@
+
+# Arbitrary Precision Arithmetic Library
+
+## Overview
+
+This Java project implements an arbitrary-precision arithmetic library that supports mathematical operations on integers and floating-point numbers beyond the limits of standard data types. It includes two main classes:
+
+- `AInteger`: Represents large integers with arbitrary precision.
+- `AFloat`: Represents large floating-point numbers with arbitrary precision.
+
+This library is developed as part of the CS1023 Software Development Fundamentals course project.
+
+## Features
+
+- Support for arbitrary-size integers and floating-point numbers
+- Basic arithmetic operations: `+`, `-`, `*`, `/`
+- Input/output from strings
+- Internal normalization and error checking
+- Modular structure with unit tests
+
+## Project Structure
+  • Java Project
+– arbitraryarithmetic
+∗ AFloat.java
+∗ AInteger.java
+∗ commonMethod.java
+∗ aarithmetic.jar
+– MyInfArith.java
+– build.xml
+– build
+∗ arbitraryarithmetic
+· AFloat.class
+· AInteger.java
+1
+· commonMethod.java
+∗ MyInfArith.class
+– Script.py
+– compile.py
+– default-test-case.txt
+– dockerfile
+– Latex documentation
+– README.md
+
+
 # ArbitraryArithmetic
 
 ## Overview
@@ -16,7 +60,6 @@
   - Subtraction (sub)
   - Multiplication (mul)
   - Division (div)
-  - Modulus (mod)
 - Java CLI runner: MyInfArith.java
 - Apache Ant-based build automation
 - Docker support
@@ -32,42 +75,24 @@
 #### Compile & Package
 
 bash
-ant (to compile)
-
-
-#### Run the Program
-
-bash
-
-
+ant compile
 
 #### Clean Build
 
 bash
 ant clean
 
+we cant run using ant (limitation)
 
 ---
 
 ### Option 2: Using the Python Script (run.py)
 
 This script compiles source files, creates the JAR, and optionally runs the program if arguments are passed.
-
-#### Run Without Execution
-
-bash
-python3 run.py
-
-
-#### Run with Arguments
-
-bash
-python3 run.py int mul 123456789 987654321
-
-
-> ✅ Automatically compiles and creates the JAR at build/aarithmetic.jar before running.
-
----
+To 
+```bash
+python3 Script.py
+```
 
 ### Option 3: Using Docker
 
@@ -82,7 +107,6 @@ docker build -t java-inf-arith .
 bash
 docker run --rm java-inf-arith float div 244727.15202 75964.3891
 
-
 ---
 
 ## Example CLI Usage
@@ -91,4 +115,7 @@ bash
 java -cp build MyInfArith int add 1234567891234567898883 9876543219876388854321
 
 
----
+
+
+
+
